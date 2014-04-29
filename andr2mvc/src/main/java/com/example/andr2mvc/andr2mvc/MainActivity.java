@@ -1,18 +1,24 @@
 package com.example.andr2mvc.andr2mvc;
-
+//test checkin 1
 import android.app.Activity;
 import android.content.ContentResolver;
 import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Environment;
 import android.provider.MediaStore;
+import android.support.v4.view.PagerAdapter;
+import android.support.v4.view.ViewPager;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.telephony.TelephonyManager;
+import android.text.TextUtils;
 import android.util.Base64;
+import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -38,29 +44,80 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.SocketTimeoutException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 
-public class MainActivity extends ActionBarActivity implements View.OnClickListener {
+public class MainActivity extends ActionBarActivity implements View.OnClickListener, GenericAsyncTaskCompleteListener<Object,String> {
+
+
+    static final String TAG = "myLogs";
+    //static final int PAGE_COUNT = 10;
+
+    ViewPager pager;
+
+    PagerAdapter pagerAdapter;
+
+    Bundle bag=new Bundle();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
         super.onCreate(savedInstanceState);
+
         setContentView(R.layout.activity_main);
 
         text=(TextView)findViewById(R.id.textView);
 
         Button b=(Button)this.findViewById(R.id.foto);
+
         b.setOnClickListener(this);
 
         img=(ImageView)this.findViewById(R.id.img);
 
         phoneNum=(Button)this.findViewById(R.id.cmdGetPhoneNumber);
+
         phoneNum.setOnClickListener(this);
+
+        getFromSrv=(Button)this.findViewById(R.id.GetFromSrv);
+
+        getFromSrv.setOnClickListener(this);
+
+        pager = (ViewPager) findViewById(R.id.pager);
+
+        new HttpGetTask_GetImagesIds(this).execute("http://muscle-planet.ru:9980/mvcapplication1/home/GetImagesIds");
+
+        pagerAdapter = new MyFragmentPagerAdapter(getSupportFragmentManager());
+
+        pager.setAdapter(pagerAdapter);
+
+        pager.setOnPageChangeListener(
+                new ViewPager.OnPageChangeListener() {
+
+                    @Override
+                    public void onPageSelected(int position) {
+                        Log.d(TAG, "onPageSelected, position = " + position);
+                    }
+
+                    @Override
+                    public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+                    }
+
+                    @Override
+                    public void onPageScrollStateChanged(int state) {
+                    }
+                });
     }
+
+
     ImageView img;
+
     TextView text;
+
     Button phoneNum;
+
+    Button getFromSrv;
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         
@@ -103,32 +160,12 @@ public class MainActivity extends ActionBarActivity implements View.OnClickListe
             String mPhoneNumber = tMgr.getLine1Number();
             text.setText("Номер телефона-"+mPhoneNumber);
         }
-
-    }
-    public void Send_Simple_Detail_To_Server(String URL, List<NameValuePair> nameValuePairs)
-
-    {
-        try {
-
-            HttpClient httpclient = new DefaultHttpClient();
-            HttpPost httppost = new HttpPost(URL);
-            httppost.setEntity(new UrlEncodedFormEntity(nameValuePairs));
-            HttpResponse response = httpclient.execute(httppost);
-            HttpEntity entity = response.getEntity();
-
-            InputStream is = entity.getContent();
-
-        } catch (ConnectTimeoutException e) {
-            Log.e("Timeout Exception: ", e.toString());
-
-        } catch (SocketTimeoutException ste) {
-            Log.e("Timeout Exception: ", ste.toString());
-
-        } catch (Exception e) {
-            Log.e("HTTP_Execption", "Error in http connection " + e.toString());
-
+        else if(v.getId()==R.id.GetFromSrv){
+            new HttpGetTask(img).execute("http://muscle-planet.ru:9980/MvcApplication1/Home/GetImage?id=8");
         }
+
     }
+
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -160,8 +197,6 @@ public class MainActivity extends ActionBarActivity implements View.OnClickListe
                        // Send_Simple_Detail_To_Server("http://192.168.1.229/mvcapplication1/home/AddImage/",nameValuePairs);
                         //postData();
                         HttpPostTask t=new HttpPostTask();
-
-
                         //t.execute("http://192.168.1.229/mvcapplication1/home/AddImage",nameValuePairs);
                         t.execute("http://pichuginsergey.no-ip.biz:9980/mvcapplication1/home/AddImage",nameValuePairs);
 
@@ -190,27 +225,39 @@ public class MainActivity extends ActionBarActivity implements View.OnClickListe
 //                    }
                 }
         }
-    public void postData() {
-        // Create a new HttpClient and Post Header
-        HttpClient httpclient = new DefaultHttpClient();
-        HttpPost httppost = new HttpPost("http://192.168.1.229/mvcapplication1/home/AddImage/obj=0");
 
-        try {
-            // Add your data
-            //List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(1);
-            //nameValuePairs.add(new BasicNameValuePair("obj", "12345"));
-            //nameValuePairs.add(new BasicNameValuePair("stringdata", "AndDev is Cool!"));
-            //httppost.setEntity(new UrlEncodedFormEntity(nameValuePairs));
 
-            // Execute HTTP Post Request
-            HttpResponse response = httpclient.execute(httppost);
 
-        } catch (ClientProtocolException e) {
-            // TODO Auto-generated catch block
-        } catch (IOException e) {
-            // TODO Auto-generated catch block
+    @Override
+    public void onTaskComplete(String source, Object result) {
+        if (source == "GetImagesIds") {
+            int[] ids = (int[]) result;
+
+            for (int i = 0; i < ids.length; i++) {
+                try {
+                    new HttpGetTask_GetImageById(this, i).execute("http://muscle-planet.ru:9980/MvcApplication1/Home/GetImageThumb?id=" + ids[i]);
+                } catch (Exception ex) {
+                }
+
+            }
+        }
+        else if (source == "GetImageById") {
+
+            dbimage img = (dbimage) result;
+
+            if (result != null) {
+                DbImageProvider.Add(img);
+
+
+                ArrayList<dbimage> list = DbImageProvider.GetList();
+
+                ((MyFragmentPagerAdapter) pagerAdapter).setImagesIds(list);
+
+                Log.d("Loading image", "Loading image " + img.id);
+            }
         }
     }
+
 
 //    public void Image_Selecting_Task(Intent data) {
 //        try {
