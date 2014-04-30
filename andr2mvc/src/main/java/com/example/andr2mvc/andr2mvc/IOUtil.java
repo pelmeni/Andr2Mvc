@@ -2,6 +2,7 @@ package com.example.andr2mvc.andr2mvc;
 
 /**
  * Created by pichugin on 26.04.2014.
+ * 1st comment from second proj
  */
 import android.util.Log;
 
