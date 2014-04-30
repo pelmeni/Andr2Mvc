@@ -1,6 +1,7 @@
 package com.example.andr2mvc.andr2mvc;
 //test checkin 1
 import android.app.Activity;
+import android.app.FragmentTransaction;
 import android.content.ContentResolver;
 import android.content.Context;
 import android.content.Intent;
@@ -11,6 +12,8 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Environment;
 import android.provider.MediaStore;
+
+import android.support.v4.app.Fragment;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.ActionBarActivity;
@@ -88,6 +91,8 @@ public class MainActivity extends ActionBarActivity implements View.OnClickListe
         new HttpGetTask_GetImagesIds(this).execute("http://muscle-planet.ru:9980/mvcapplication1/home/GetImagesIds");
 
         pagerAdapter = new MyFragmentPagerAdapter(getSupportFragmentManager());
+
+
 
         pager.setAdapter(pagerAdapter);
 
@@ -246,16 +251,53 @@ public class MainActivity extends ActionBarActivity implements View.OnClickListe
             dbimage img = (dbimage) result;
 
             if (result != null) {
-                DbImageProvider.Add(img);
 
+                Boolean isFirst=DbImageProvider.Count()==0;
+
+                DbImageProvider.Add(img);
 
                 ArrayList<dbimage> list = DbImageProvider.GetList();
 
                 ((MyFragmentPagerAdapter) pagerAdapter).setImagesIds(list);
 
+                if(isFirst)
+                {
+
+                    //pager.setCurrentItem(0,true );
+
+                    //android.app.Fragment f = getFragmentManager().findFragmentById(R.id.RelativeLayout1);
+                    //Fragment f=new PageFragment(img);
+                    //ImageView i= (ImageView)f.getView().findViewById(R.id.image);
+                    //i.setImageBitmap(img.bytes);
+                    //FragmentTransaction ft = getFragmentManager().beginTransaction();
+                }
+                PageFragment pf=getFreeFragment();
+
+                if(pf!=null){
+                    ImageView i=(ImageView)pf.getView().findViewById(R.id.image);
+
+                    i.setImageBitmap(img.bytes);
+                }
+
+
+
+
+
                 Log.d("Loading image", "Loading image " + img.id);
+
             }
         }
+    }
+
+    PageFragment getFreeFragment(){
+
+        for(int i=0;i<getSupportFragmentManager().getFragments().size();i++)
+        {
+            PageFragment pf=(PageFragment)getSupportFragmentManager().getFragments().get(0);
+            if(pf.image==null)
+                return pf;
+        }
+        return null;
     }
 
 

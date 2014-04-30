@@ -21,12 +21,15 @@ public class MyFragmentPagerAdapter extends FragmentPagerAdapter {
     {
         //bag.putIntArray("images_ids",ids);
 
+        //Boolean isFirst=(mCount==0);
+
         mCount =ids == null ? 0 : ids.size();
 
         super.notifyDataSetChanged();
+
     }
 
-    private int mCount=4;
+    private int mCount=4; 
 
     @Override
     public Fragment getItem(int position) {

@@ -7,6 +7,7 @@ import java.util.ArrayList;
  */
 public class DbImageProvider {
     static ArrayList<dbimage> list=new ArrayList<dbimage>();
+
     public static void Add(dbimage i){
 
         if(GetById(i.id)==null)
@@ -21,6 +22,10 @@ public class DbImageProvider {
     }
     public static ArrayList<dbimage> GetList(){
         return list;
+    }
+
+    public static int Count(){
+        return list.size();
     }
 
 }
