@@ -2,6 +2,7 @@ package com.example.andr2mvc.andr2mvc;
 
 /**
  * Created by PichuginSI on 29.04.2014.
+ * yrtygjhbjhnlkhnjkllnn
  */
 public  class ArrayUtil {
     public static int[] convert(String[] string) {
