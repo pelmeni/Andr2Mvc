@@ -3,8 +3,15 @@
     xmlns:tools="http://schemas.android.com/tools"
     tools:context="com.example.andr2mvc.andr2mvc.MainActivity2" >
     
-    <item android:id="@+id/action_settings"
-        android:title="@string/action_settings"
+    <item android:id="@+id/action_phone_number"
+        android:title="Номер телефона"
         android:orderInCategory="100"
         app:showAsAction="never" />
+
+    <item android:id="@+id/action_camera"
+        android:icon="@drawable/ic_action_camera"
+        android:title="Фото"
+        app:showAsAction="ifRoom"
+        />
+
 </menu>

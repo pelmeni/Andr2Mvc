@@ -1,27 +1,19 @@
 package com.example.andr2mvc.andr2mvc;
 //test checkin 1
+import android.annotation.TargetApi;
 import android.app.Activity;
-import android.app.FragmentTransaction;
-import android.content.ContentResolver;
 import android.content.Context;
 import android.content.Intent;
-import android.database.Cursor;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.net.Uri;
-import android.os.AsyncTask;
+import android.os.Build;
+import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
-
-import android.support.v4.app.Fragment;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.ActionBarActivity;
-import android.os.Bundle;
 import android.telephony.TelephonyManager;
-import android.text.TextUtils;
 import android.util.Base64;
-import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -29,29 +21,17 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
-import org.apache.http.HttpEntity;
-import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
-import org.apache.http.client.ClientProtocolException;
-import org.apache.http.client.HttpClient;
-import org.apache.http.client.entity.UrlEncodedFormEntity;
-import org.apache.http.client.methods.HttpPost;
-import org.apache.http.conn.ConnectTimeoutException;
-import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.message.BasicNameValuePair;
 
 import java.io.File;
 import java.io.IOException;
-import java.io.InputStream;
-import java.net.SocketTimeoutException;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 
-public class MainActivity extends ActionBarActivity implements View.OnClickListener, GenericAsyncTaskCompleteListener<Object,String> {
+public class MainActivity extends ActionBarActivity  implements View.OnClickListener, GenericAsyncTaskCompleteListener<Object,String> {
 
 
     static final String TAG = "myLogs";
@@ -63,6 +43,7 @@ public class MainActivity extends ActionBarActivity implements View.OnClickListe
 
     Bundle bag=new Bundle();
 
+    @TargetApi(Build.VERSION_CODES.HONEYCOMB)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
@@ -70,64 +51,42 @@ public class MainActivity extends ActionBarActivity implements View.OnClickListe
 
         setContentView(R.layout.activity_main);
 
-        text=(TextView)findViewById(R.id.textView);
-
-        Button b=(Button)this.findViewById(R.id.foto);
-
-        b.setOnClickListener(this);
-
-        img=(ImageView)this.findViewById(R.id.img);
-
-        phoneNum=(Button)this.findViewById(R.id.cmdGetPhoneNumber);
-
-        phoneNum.setOnClickListener(this);
-
-        getFromSrv=(Button)this.findViewById(R.id.GetFromSrv);
-
-        getFromSrv.setOnClickListener(this);
-
         pager = (ViewPager) findViewById(R.id.pager);
 
         new HttpGetTask_GetImagesIds(this).execute("http://muscle-planet.ru:9980/mvcapplication1/home/GetImagesIds");
 
         pagerAdapter = new MyFragmentPagerAdapter(getSupportFragmentManager());
 
-
-
         pager.setAdapter(pagerAdapter);
 
-        pager.setOnPageChangeListener(
-                new ViewPager.OnPageChangeListener() {
-
-                    @Override
-                    public void onPageSelected(int position) {
-                        Log.d(TAG, "onPageSelected, position = " + position);
-                    }
-
-                    @Override
-                    public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
-                    }
-
-                    @Override
-                    public void onPageScrollStateChanged(int state) {
-                    }
-                });
+//        pager.setOnPageChangeListener(
+//                new ViewPager.OnPageChangeListener() {
+//
+//                    @Override
+//                    public void onPageSelected(int position) {
+//                        Log.d(TAG, "onPageSelected, position = " + position);
+//                    }
+//
+//                    @Override
+//                    public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+//                    }
+//
+//                    @Override
+//                    public void onPageScrollStateChanged(int state) {
+//                    }
+//                });
     }
 
 
-    ImageView img;
 
-    TextView text;
 
-    Button phoneNum;
 
-    Button getFromSrv;
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         
         // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.main, menu);
+        getMenuInflater().inflate(R.menu.main_activity2, menu);
         return true;
     }
 
@@ -137,8 +96,35 @@ public class MainActivity extends ActionBarActivity implements View.OnClickListe
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
-        if (id == R.id.action_settings) {
+        if (id == R.id.action_camera) {
+
+
+
+            Intent i = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
+            File photo = new File(Environment.getExternalStorageDirectory(),  "Pic.jpg");
+            //Toast.makeText(this, Environment.getExternalStorageDirectory().toString(),Toast.LENGTH_LONG).show();
+            //text.setText(Environment.getExternalStorageDirectory().toString());
+
+            i.putExtra(MediaStore.EXTRA_OUTPUT,Uri.fromFile(photo));
+            imageUri = Uri.fromFile(photo);
+            startActivityForResult(i, CAMERA_PICTURE);
+
+
+
             return true;
+        }
+        else if(id==R.id.action_phone_number) {
+            TelephonyManager tMgr = (TelephonyManager) getSystemService(Context.TELEPHONY_SERVICE);
+            String mPhoneNumber = tMgr.getLine1Number();
+
+            Intent intent = new Intent(this, OwnPhoneNumber.class);
+
+            intent.putExtra("phoneNumber","Номер телефона-" + mPhoneNumber);
+
+            startActivity(intent);
+
+
+
         }
         return super.onOptionsItemSelected(item);
     }
@@ -148,26 +134,26 @@ public class MainActivity extends ActionBarActivity implements View.OnClickListe
     @Override
     public void onClick(View v) {
 
-        if(v.getId()==R.id.foto){
-            Intent i = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
-            File photo = new File(Environment.getExternalStorageDirectory(),  "Pic.jpg");
-            //Toast.makeText(this, Environment.getExternalStorageDirectory().toString(),Toast.LENGTH_LONG).show();
-            text.setText(Environment.getExternalStorageDirectory().toString());
+//        if(v.getId()==R.id.foto){
+//            Intent i = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
+//            File photo = new File(Environment.getExternalStorageDirectory(),  "Pic.jpg");
+//            //Toast.makeText(this, Environment.getExternalStorageDirectory().toString(),Toast.LENGTH_LONG).show();
+//            text.setText(Environment.getExternalStorageDirectory().toString());
+//
+//            i.putExtra(MediaStore.EXTRA_OUTPUT,Uri.fromFile(photo));
+//            imageUri = Uri.fromFile(photo);
+//            startActivityForResult(i, CAMERA_PICTURE);
 
-            i.putExtra(MediaStore.EXTRA_OUTPUT,Uri.fromFile(photo));
-            imageUri = Uri.fromFile(photo);
-            startActivityForResult(i, CAMERA_PICTURE);
-
-        }
-        else if(v.getId()==R.id.cmdGetPhoneNumber){
-
-            TelephonyManager tMgr = (TelephonyManager)getSystemService(Context.TELEPHONY_SERVICE);
-            String mPhoneNumber = tMgr.getLine1Number();
-            text.setText("Номер телефона-"+mPhoneNumber);
-        }
-        else if(v.getId()==R.id.GetFromSrv){
-            new HttpGetTask(img).execute("http://muscle-planet.ru:9980/MvcApplication1/Home/GetImage?id=8");
-        }
+//        }
+//        else if(v.getId()==R.id.cmdGetPhoneNumber){
+//
+//            TelephonyManager tMgr = (TelephonyManager)getSystemService(Context.TELEPHONY_SERVICE);
+//            String mPhoneNumber = tMgr.getLine1Number();
+//            text.setText("Номер телефона-"+mPhoneNumber);
+//        }
+//        else if(v.getId()==R.id.GetFromSrv){
+//            new HttpGetTask(img).execute("http://muscle-planet.ru:9980/MvcApplication1/Home/GetImage?id=8");
+//        }
 
     }
 
@@ -184,20 +170,19 @@ public class MainActivity extends ActionBarActivity implements View.OnClickListe
                     Log.d("Camera", "path-"+imageUri.getPath());
                     Log.d("Camera", "length-"+f.length());
 
-                    img.setImageURI(imageUri);
 
                     byte[] buf= new byte[0];
                     try {
-                        text.setText("try to read file-"+f.getPath());
+                       // text.setText("try to read file-"+f.getPath());
                         //buf = IOUtil.readFile(f);
                         buf=IOUtil.getByteArrayFromImage(f.getPath());
-                        text.setText("ok1");
+                        //text.setText("ok1");
                         String imgString = Base64.encodeToString(buf, Base64.NO_WRAP);
 
                         List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(1);
                         nameValuePairs.add(new BasicNameValuePair("obj", imgString));
 
-                        text.setText(f.getName());
+                        //text.setText(f.getName());
 
                        // Send_Simple_Detail_To_Server("http://192.168.1.229/mvcapplication1/home/AddImage/",nameValuePairs);
                         //postData();
@@ -208,9 +193,16 @@ public class MainActivity extends ActionBarActivity implements View.OnClickListe
 
                         Log.d("Camera", "base64-" + imgString);
                     } catch (IOException e) {
-                        text.setText(e.getMessage());
+                       //text.setText(e.getMessage());
                         e.printStackTrace();
                     }
+
+                    Intent intent = new Intent(this, CamImageActivity.class);
+
+                    intent.putExtra("image",imageUri.toString());
+
+
+                    startActivity(intent);
 
 
 
