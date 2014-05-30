@@ -1,5 +1,6 @@
 package com.example.andr2mvc.andr2mvc;
 
+import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -19,9 +20,12 @@ public class PageFragment extends Fragment {
 
     }
 
-    public PageFragment (dbimage i) {
-        image=i;
-    }
+//    public PageFragment (dbimage i) {
+//        image=i;
+//    }
+//    public PageFragment (int i) {
+//        image=new dbimage(i,null);
+//    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -40,6 +44,12 @@ public class PageFragment extends Fragment {
 
             imageView.setImageBitmap(image.bytes);
         }
+
+        TextView textView = (TextView) view.findViewById(R.id.textView);
+
+       textView.setText(getArguments().getInt("pos"));
+
+
         return view;
     }
 }

@@ -28,7 +28,7 @@ public class GallaryActivity extends ActionBarActivity implements View.OnClickLi
 
         pager = (ViewPager) findViewById(R.id.pager);
 
-        pagerAdapter = new MyFragmentPagerAdapter(getSupportFragmentManager());
+        pagerAdapter = new MyIntFragmentPagerAdapter(getSupportFragmentManager());
 
         pager.setAdapter(pagerAdapter);
 
@@ -61,7 +61,13 @@ public class GallaryActivity extends ActionBarActivity implements View.OnClickLi
         if (source == "GetImagesIds") {
             int[] ids = (int[]) result;
 
-            for (int i = 0; i < ids.length; i++) {
+            ((MyIntFragmentPagerAdapter) pagerAdapter).setImagesIds(ids);
+
+            pager.setCurrentItem(ids[0]);
+
+            return;
+
+            /*for (int i = 0; i < ids.length; i++) {
                 try {
                     Log.d("log","start image loading task for - "+"http://muscle-planet.ru:9980/MvcApplication1/Home/GetImageThumb?id=" + ids[i]);
                     new HttpGetTask_GetImageById(this, i).execute("http://muscle-planet.ru:9980/MvcApplication1/Home/GetImageThumb?id=" + ids[i]);
@@ -69,7 +75,7 @@ public class GallaryActivity extends ActionBarActivity implements View.OnClickLi
                     Log.d("log",ex.toString());
                 }
 
-            }
+            }*/
 //            if (DbImageProvider.Count() > 0) {
 //                PageFragment pf = getFreeFragment();
 //

@@ -34,10 +34,11 @@ public class MyFragmentPagerAdapter extends FragmentStatePagerAdapter {
 
     @Override
     public Fragment getItem(int position) {
-        dbimage i=DbImageProvider.GetById(position);
+        /*dbimage i=DbImageProvider.GetById(position);
         if(i!=null)
             return new PageFragment(i);
-        else return  new PageFragment();
+        else*/
+            return  new PageFragment();
     }
 
     @Override
