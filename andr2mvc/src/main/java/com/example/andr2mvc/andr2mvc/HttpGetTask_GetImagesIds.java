@@ -74,11 +74,13 @@ public class HttpGetTask_GetImagesIds extends AsyncTask<String,Void,String> {
 
     protected void onPostExecute(String result) {
 
-        String[] l= TextUtils.split(result.toString(), ",");
+        if(result!=null) {
+            String[] l = TextUtils.split(result.toString(), ",");
 
-        int[] convert = ArrayUtil.convert(l);
+            int[] convert = ArrayUtil.convert(l);
 
-        callback.onTaskComplete("GetImagesIds",convert);
+            callback.onTaskComplete("GetImagesIds", convert);
+        }
     }
 
     @Override

@@ -8,5 +8,6 @@
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="title_activity_cam_image">CamImageActivity</string>
     <string name="title_activity_own_phone_number">OwnPhoneNumber</string>
+    <string name="title_activity_gallary">GallaryActivity</string>
 
 </resources>

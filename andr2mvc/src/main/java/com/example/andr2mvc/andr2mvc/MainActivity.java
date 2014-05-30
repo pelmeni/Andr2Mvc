@@ -31,15 +31,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 
-public class MainActivity extends ActionBarActivity  implements View.OnClickListener, GenericAsyncTaskCompleteListener<Object,String> {
+public class MainActivity extends ActionBarActivity   {
 
 
     static final String TAG = "myLogs";
     //static final int PAGE_COUNT = 10;
 
-    ViewPager pager;
-
-    PagerAdapter pagerAdapter;
 
     Bundle bag=new Bundle();
 
@@ -51,13 +48,13 @@ public class MainActivity extends ActionBarActivity  implements View.OnClickList
 
         setContentView(R.layout.activity_main);
 
-        pager = (ViewPager) findViewById(R.id.pager);
 
-        new HttpGetTask_GetImagesIds(this).execute("http://muscle-planet.ru:9980/mvcapplication1/home/GetImagesIds");
+//                if (savedInstanceState == null) {
+//                    getSupportFragmentManager().beginTransaction()
+//                            .add(R.id.container, new PlaceholderFragment())
+//                            .commit();
+//                }
 
-        pagerAdapter = new MyFragmentPagerAdapter(getSupportFragmentManager());
-
-        pager.setAdapter(pagerAdapter);
 
 //        pager.setOnPageChangeListener(
 //                new ViewPager.OnPageChangeListener() {
@@ -126,12 +123,22 @@ public class MainActivity extends ActionBarActivity  implements View.OnClickList
 
 
         }
+        else if(id==R.id.action_roll) {
+            Intent intent = new Intent(this, GallaryActivity.class);
+
+            //intent.putExtra("phoneNumber","Номер телефона-" + mPhoneNumber);
+
+            startActivity(intent);
+
+        }
+
+
         return super.onOptionsItemSelected(item);
     }
     int GALLERY_PICTURE=0;
     static int CAMERA_PICTURE=1;
     private Uri imageUri;
-    @Override
+
     public void onClick(View v) {
 
 //        if(v.getId()==R.id.foto){
@@ -225,61 +232,7 @@ public class MainActivity extends ActionBarActivity  implements View.OnClickList
 
 
 
-    @Override
-    public void onTaskComplete(String source, Object result) {
-        if (source == "GetImagesIds") {
-            int[] ids = (int[]) result;
 
-            for (int i = 0; i < ids.length; i++) {
-                try {
-                    new HttpGetTask_GetImageById(this, i).execute("http://muscle-planet.ru:9980/MvcApplication1/Home/GetImageThumb?id=" + ids[i]);
-                } catch (Exception ex) {
-                }
-
-            }
-        }
-        else if (source == "GetImageById") {
-
-            dbimage img = (dbimage) result;
-
-            if (result != null) {
-
-                Boolean isFirst=DbImageProvider.Count()==0;
-
-                DbImageProvider.Add(img);
-
-                ArrayList<dbimage> list = DbImageProvider.GetList();
-
-                ((MyFragmentPagerAdapter) pagerAdapter).setImagesIds(list);
-
-                if(isFirst)
-                {
-
-                    //pager.setCurrentItem(0,true );
-
-                    //android.app.Fragment f = getFragmentManager().findFragmentById(R.id.RelativeLayout1);
-                    //Fragment f=new PageFragment(img);
-                    //ImageView i= (ImageView)f.getView().findViewById(R.id.image);
-                    //i.setImageBitmap(img.bytes);
-                    //FragmentTransaction ft = getFragmentManager().beginTransaction();
-                }
-                PageFragment pf=getFreeFragment();
-
-                if(pf!=null){
-                    ImageView i=(ImageView)pf.getView().findViewById(R.id.image);
-
-                    i.setImageBitmap(img.bytes);
-                }
-
-
-
-
-
-                Log.d("Loading image", "Loading image " + img.id);
-
-            }
-        }
-    }
 
     PageFragment getFreeFragment(){
 

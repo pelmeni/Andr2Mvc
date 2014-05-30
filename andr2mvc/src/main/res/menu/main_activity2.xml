@@ -13,5 +13,10 @@
         android:title="Фото"
         app:showAsAction="ifRoom"
         />
+    <item android:id="@+id/action_roll"
+        android:icon="@drawable/ic_action_cloud"
+        android:title="Галерея"
+        app:showAsAction="ifRoom"
+        />
 
 </menu>

@@ -33,6 +33,14 @@
             android:name="com.example.andr2mvc.andr2mvc.OwnPhoneNumber"
             android:label="@string/title_activity_own_phone_number" >
         </activity>
+        <activity
+            android:name="com.example.andr2mvc.andr2mvc.GallaryActivity"
+            android:label="@string/title_activity_gallary"
+            android:parentActivityName="com.example.andr2mvc.andr2mvc.MainActivity" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.example.andr2mvc.andr2mvc.MainActivity" />
+        </activity>
     </application>
 
 </manifest>

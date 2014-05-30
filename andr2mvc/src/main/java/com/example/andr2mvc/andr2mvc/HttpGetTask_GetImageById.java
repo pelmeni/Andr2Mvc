@@ -110,7 +110,7 @@ public class HttpGetTask_GetImageById extends AsyncTask<String,Void,dbimage> {
     @Override
     protected dbimage doInBackground(String... urls) {
 
-        if(lock.tryLock()){
+        //if(lock.tryLock()){
             try {
                 String result = GetData(urls[0]);
 
@@ -123,12 +123,13 @@ public class HttpGetTask_GetImageById extends AsyncTask<String,Void,dbimage> {
                 return new dbimage(imageId, bm);
             }
             catch (Exception ex){
+                if(ex!=null)
                 Log.d("HttpGetTask_GetImageById",ex.getMessage());
             }
             finally{
-                lock.unlock();
+                //lock.unlock();
             }
-        }
+        //}
         return null;
     }
 
