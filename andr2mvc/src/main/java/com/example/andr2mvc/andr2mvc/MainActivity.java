@@ -31,7 +31,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 
-public class MainActivity extends ActionBarActivity   {
+public class MainActivity extends ActionBarActivity  {
 
 
     static final String TAG = "myLogs";
@@ -244,6 +244,8 @@ public class MainActivity extends ActionBarActivity   {
         }
         return null;
     }
+
+
 
 
 //    public void Image_Selecting_Task(Intent data) {

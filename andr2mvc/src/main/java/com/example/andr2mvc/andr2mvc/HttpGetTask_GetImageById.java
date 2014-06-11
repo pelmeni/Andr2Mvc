@@ -104,7 +104,9 @@ public class HttpGetTask_GetImageById extends AsyncTask<String,Void,dbimage> {
 
     protected void onPostExecute(dbimage result) {
         //_img.setImageBitmap(result);
-        callback.onTaskComplete("GetImageById",result);
+        if(result!=null) {
+            callback.onTaskComplete("GetImageById", result);
+        }
     }
 
     @Override

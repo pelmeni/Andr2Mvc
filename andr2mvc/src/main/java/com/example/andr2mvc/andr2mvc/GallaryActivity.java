@@ -32,7 +32,9 @@ public class GallaryActivity extends ActionBarActivity implements View.OnClickLi
 
         pager.setAdapter(pagerAdapter);
 
-        new HttpGetTask_GetImagesIds(this).execute("http://muscle-planet.ru:9980/mvcapplication1/home/GetImagesIds");
+        HttpGetTask_GetImagesIds t=new HttpGetTask_GetImagesIds(this);
+        t.execute("http://muscle-planet.ru:9980/mvcapplication1/home/GetImagesIds");
+        t=null;
 
     }
 
@@ -63,7 +65,15 @@ public class GallaryActivity extends ActionBarActivity implements View.OnClickLi
 
             ((MyIntFragmentPagerAdapter) pagerAdapter).setImagesIds(ids);
 
+
+            Log.d("log","Loading images count ="+ids.length);
+
             pager.setCurrentItem(ids[0]);
+
+            HttpGetTask_GetImageById t=new HttpGetTask_GetImageById(this, ids[0]);
+            t.execute("http://muscle-planet.ru:9980/MvcApplication1/Home/GetImageThumb?id=" + ids[0]);
+            //t=null;
+            System.gc();
 
             return;
 

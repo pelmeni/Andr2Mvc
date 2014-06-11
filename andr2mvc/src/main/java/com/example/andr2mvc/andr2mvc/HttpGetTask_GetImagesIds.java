@@ -68,6 +68,7 @@ public class HttpGetTask_GetImagesIds extends AsyncTask<String,Void,String> {
     } catch (IOException e) {
 //            // TODO Auto-generated catch block
     }
+
         return null;
 }
 

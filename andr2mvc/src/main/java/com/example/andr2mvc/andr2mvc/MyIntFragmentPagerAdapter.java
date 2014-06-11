@@ -20,11 +20,12 @@ public class MyIntFragmentPagerAdapter extends FragmentStatePagerAdapter {
 
             mCount =ids == null ? 0 : ids.length;
 
+
             super.notifyDataSetChanged();
 
         }
 
-        private int mCount=4;
+        private int mCount=0;
 
         @Override
         public Fragment getItem(int position) {
