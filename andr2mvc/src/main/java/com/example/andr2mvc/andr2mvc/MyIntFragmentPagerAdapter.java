@@ -14,11 +14,12 @@ public class MyIntFragmentPagerAdapter extends FragmentStatePagerAdapter {
             super(fm);
 
         }
-
+int []m_ids;
         public void setImagesIds(int[] ids)
         {
 
             mCount =ids == null ? 0 : ids.length;
+            m_ids=ids;
 
 
             super.notifyDataSetChanged();
@@ -35,6 +36,7 @@ public class MyIntFragmentPagerAdapter extends FragmentStatePagerAdapter {
 
             Bundle b=new Bundle();
             b.putInt("pos",position);
+            b.putIntArray("array_img",m_ids);
             pf.setArguments(b);
             return pf;
             //else return  new PageFragment();

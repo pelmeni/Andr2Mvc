@@ -18,6 +18,7 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.textservice.TextServicesManager;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -111,8 +112,10 @@ public class MainActivity extends ActionBarActivity  {
             return true;
         }
         else if(id==R.id.action_phone_number) {
-            TelephonyManager tMgr = (TelephonyManager) getSystemService(Context.TELEPHONY_SERVICE);
+            //TelephonyManager tMgr = (TelephonyManager) getSystemService(Context.TELEPHONY_SERVICE);
+            TelephonyManager tMgr = (TelephonyManager) getSystemService("phone");
             String mPhoneNumber = tMgr.getLine1Number();
+            TextServicesManager m = (TextServicesManager) getSystemService(Context.TEXT_SERVICES_MANAGER_SERVICE);
 
             Intent intent = new Intent(this, OwnPhoneNumber.class);
 

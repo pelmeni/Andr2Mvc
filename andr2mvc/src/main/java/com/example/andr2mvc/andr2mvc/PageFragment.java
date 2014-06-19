@@ -54,11 +54,13 @@ ImageView imageV;
         imageV=(ImageView)view.findViewById(R.id.image1);
         int pos=getArguments().getInt("pos");
 
-        String s=String.valueOf(pos);
+        int[]ids=(int[])getArguments().getIntArray("array_img");
+
+        String s=String.valueOf(ids[pos]);
 
         textView.setText(s);
 
-        HttpGetTask_GetImageById t=new HttpGetTask_GetImageById(this, pos);
+        HttpGetTask_GetImageById t=new HttpGetTask_GetImageById(this, ids[pos]);
         t.execute("http://muscle-planet.ru:9980/MvcApplication1/Home/GetImageThumb?id=" + s);
         t=null;
         System.gc();

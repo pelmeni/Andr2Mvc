@@ -68,12 +68,12 @@ public class GallaryActivity extends ActionBarActivity implements View.OnClickLi
 
             Log.d("log","Loading images count ="+ids.length);
 
-            pager.setCurrentItem(ids[0]);
+            pager.setCurrentItem(0);
 
-            HttpGetTask_GetImageById t=new HttpGetTask_GetImageById(this, ids[0]);
-            t.execute("http://muscle-planet.ru:9980/MvcApplication1/Home/GetImageThumb?id=" + ids[0]);
+            //HttpGetTask_GetImageById t=new HttpGetTask_GetImageById(this, ids[0]);
+            //t.execute("http://muscle-planet.ru:9980/MvcApplication1/Home/GetImageThumb?id=" + ids[0]);
             //t=null;
-            System.gc();
+            //System.gc();
 
             return;
 
@@ -102,20 +102,20 @@ public class GallaryActivity extends ActionBarActivity implements View.OnClickLi
         }
         else if (source == "GetImageById") {
 
-            dbimage img = (dbimage) result;
+            //dbimage img = (dbimage) result;
 
             if (result != null) {
 
-                Boolean isFirst=DbImageProvider.Count()==0;
+                //Boolean isFirst=DbImageProvider.Count()==0;
 
-                DbImageProvider.Add(img);
+                //DbImageProvider.Add(img);
 
-                ArrayList<dbimage> list = DbImageProvider.GetList();
+                //ArrayList<dbimage> list = DbImageProvider.GetList();
+                //DbImageProvider.
 
-                ((MyFragmentPagerAdapter) pagerAdapter).setImagesIds(list);
+                //((MyIntFragmentPagerAdapter) pagerAdapter).setImagesIds(list);
 
-                if(isFirst)
-                {
+                //if(isFirst)                {
 
                     //pager.setCurrentItem(0,true );
 
@@ -124,7 +124,7 @@ public class GallaryActivity extends ActionBarActivity implements View.OnClickLi
                     //ImageView i= (ImageView)f.getView().findViewById(R.id.image);
                     //i.setImageBitmap(img.bytes);
                     //FragmentTransaction ft = getFragmentManager().beginTransaction();
-                }
+                //}
                 //PageFragment pf=getFreeFragment();
 
                 //if(pf!=null){
@@ -137,7 +137,7 @@ public class GallaryActivity extends ActionBarActivity implements View.OnClickLi
 
 
 
-                Log.d("Loading image", "Loading image " + img.id);
+                //Log.d("Loading image", "Loading image " + img.id);
 
             }
         }
