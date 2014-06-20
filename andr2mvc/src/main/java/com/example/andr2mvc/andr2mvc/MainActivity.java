@@ -134,6 +134,14 @@ public class MainActivity extends ActionBarActivity  {
             startActivity(intent);
 
         }
+        else if(id==R.id.action_tiled_gallery) {
+            Intent intent = new Intent(this,tiled_gallery.class);
+
+            //intent.putExtra("phoneNumber","Номер телефона-" + mPhoneNumber);
+
+            startActivity(intent);
+
+        }
 
 
         return super.onOptionsItemSelected(item);

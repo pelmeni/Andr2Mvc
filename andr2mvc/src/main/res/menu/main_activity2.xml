@@ -18,5 +18,10 @@
         android:title="Галерея"
         app:showAsAction="ifRoom"
         />
+    <item android:id="@+id/action_tiled_gallery"
+        android:icon="@drawable/ic_action_view_as_grid"
+        android:title="Галерея плиткой"
+        app:showAsAction="ifRoom"
+        />
 
 </menu>
