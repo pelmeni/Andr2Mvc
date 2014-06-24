@@ -34,7 +34,7 @@ import java.util.List;
 
 public class MainActivity extends ActionBarActivity  {
 
-
+    GPSLocationListener gps;
     static final String TAG = "myLogs";
     //static final int PAGE_COUNT = 10;
 
@@ -49,6 +49,8 @@ public class MainActivity extends ActionBarActivity  {
 
         setContentView(R.layout.activity_main);
 
+
+        gps=new GPSLocationListener(this.getApplicationContext());
 
 //                if (savedInstanceState == null) {
 //                    getSupportFragmentManager().beginTransaction()
@@ -190,6 +192,10 @@ public class MainActivity extends ActionBarActivity  {
 
 
                     byte[] buf= new byte[0];
+
+                    String latitude="";
+                    String longtitude="";
+
                     try {
                        // text.setText("try to read file-"+f.getPath());
                         //buf = IOUtil.readFile(f);
@@ -197,8 +203,19 @@ public class MainActivity extends ActionBarActivity  {
                         //text.setText("ok1");
                         String imgString = Base64.encodeToString(buf, Base64.NO_WRAP);
 
+
+                        TelephonyManager tMgr = (TelephonyManager) getSystemService(Context.TELEPHONY_SERVICE);
+
+                        String simNo = tMgr.getSimSerialNumber();
+
+                        latitude=""+gps.getLocation().getLatitude();
+                        longtitude=""+gps.getLocation().getLongitude();
+
                         List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(1);
                         nameValuePairs.add(new BasicNameValuePair("obj", imgString));
+                        nameValuePairs.add(new BasicNameValuePair("latitude",latitude));
+                        nameValuePairs.add(new BasicNameValuePair("longtitude",longtitude));
+                        nameValuePairs.add(new BasicNameValuePair("simno",simNo));
 
                         //text.setText(f.getName());
 
@@ -207,6 +224,7 @@ public class MainActivity extends ActionBarActivity  {
                         HttpPostTask t=new HttpPostTask();
                         //t.execute("http://192.168.1.229/mvcapplication1/home/AddImage",nameValuePairs);
                         t.execute("http://pichuginsergey.no-ip.biz:9980/mvcapplication1/home/AddImage",nameValuePairs);
+
 
 
                         Log.d("Camera", "base64-" + imgString);
@@ -218,6 +236,8 @@ public class MainActivity extends ActionBarActivity  {
                     Intent intent = new Intent(this, CamImageActivity.class);
 
                     intent.putExtra("image",imageUri.toString());
+                    intent.putExtra("longtitude",longtitude);
+                    intent.putExtra("latitude",latitude);
 
 
                     startActivity(intent);
