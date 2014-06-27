@@ -5,12 +5,17 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.AdapterView;
 import android.widget.GridView;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 
+import static android.widget.AdapterView.*;
 
-public class tiled_gallery extends Activity implements GenericAsyncTaskCompleteListener<Object,String>{
+
+public class tiled_gallery extends Activity implements GenericAsyncTaskCompleteListener<Object,String> {
 
     private GridView gridView;
     private GridViewAdapter customGridAdapter;
@@ -26,9 +31,18 @@ public class tiled_gallery extends Activity implements GenericAsyncTaskCompleteL
         t=null;
 
 
-
     }
-
+//    OnItemClickListener myOnItemClickListener
+//            = new OnItemClickListener(){
+//
+//        @Override
+//        public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+//            String prompt = (String)parent.getItemAtPosition(position);
+//            Toast.makeText(getApplicationContext(),
+//                    prompt,
+//                    Toast.LENGTH_LONG).show();
+//
+//        }};
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -71,6 +85,7 @@ public class tiled_gallery extends Activity implements GenericAsyncTaskCompleteL
 
             gridView.setAdapter(customGridAdapter);
 
+            //gridView.setOnItemClickListener(myOnItemClickListener);
 
             //((MyIntFragmentPagerAdapter) pagerAdapter).setImagesIds(ids);
 
@@ -88,4 +103,7 @@ public class tiled_gallery extends Activity implements GenericAsyncTaskCompleteL
 
         }
     }
+
+
+
 }

@@ -32,13 +32,14 @@ public class CamImageActivity extends ActionBarActivity  {
         String imageUriStr=intent.getStringExtra("image");
 
         latitude=intent.getStringExtra("latitude");
+
         longtitude=intent.getStringExtra("longtitude");
 
         Uri imageUri= Uri.parse(imageUriStr);
 
         img.setImageURI(imageUri);
 
-
+        img.setScaleType(ImageView.ScaleType.FIT_XY);
 
 
     }

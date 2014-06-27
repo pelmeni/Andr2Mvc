@@ -4,8 +4,10 @@ import java.io.File;
 import java.util.ArrayList;
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.net.Uri;
 import android.os.Environment;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -14,13 +16,14 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 /**
  * 
  * @author javatechig {@link http://javatechig.com}
  * 
  */
-public class GridViewAdapter extends ArrayAdapter<ImageItem> {
+public class GridViewAdapter extends ArrayAdapter<ImageItem> implements GenericAsyncTaskCompleteListener<Object,String> {
 	private Context context;
 	private int layoutResourceId;
 	private ArrayList<ImageItem> data = new ArrayList<ImageItem>();
@@ -49,14 +52,14 @@ public class GridViewAdapter extends ArrayAdapter<ImageItem> {
 			holder = (ViewHolder) row.getTag();
 		}
 
-		ImageItem item = data.get(position);
+		final ImageItem item = data.get(position);
 		holder.imageTitle.setText(item.getTitle());
 
         holder.image.setImageBitmap(item.getImage());
 
-        String filePath= Environment.getExternalStorageDirectory()+"/Andr2Mvc/" +  item.getId()+"_icon.jpg";
+        final String filePath= Environment.getExternalStorageDirectory()+"/Andr2Mvc/" +  item.getId()+"_icon.jpg";
 
-        File file = new File(filePath);
+        final File file = new File(filePath);
 
         if(file.exists())
         {
@@ -69,9 +72,76 @@ public class GridViewAdapter extends ArrayAdapter<ImageItem> {
             t = null;
             System.gc();
         }
+
+
+        final HttpGetTask_GetImageById t=new HttpGetTask_GetImageById(this, item.getId());
+
+        row.setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View v) {
+
+                String filePath= Environment.getExternalStorageDirectory()+"/Andr2Mvc/" + item.getId()+"_full.jpg";
+
+                File file = new File(filePath);
+
+                if(!file.exists()) {
+                    t.execute("http://muscle-planet.ru:9980/MvcApplication1/Home/GetImage?id=" + item.getId());
+                }
+                else{
+                    Intent intent = new Intent(getContext(), CamImageActivity.class);
+
+                    Uri imageUri=Uri.fromFile(file);
+
+                    intent.putExtra("image",imageUri.toString());
+
+                    getContext().startActivity(intent);
+
+                }
+            }
+        });
+
+
 		return row;
 	}
 
+    @Override
+    public void onTaskComplete(String source, Object result) {
+
+        if (source == "GetImageById") {
+
+            dbimage img = (dbimage) result;
+
+            if (img != null) {
+
+                String filePath= Environment.getExternalStorageDirectory()+"/Andr2Mvc/" +  img.id+"_full.jpg";
+                File dir= new File( Environment.getExternalStorageDirectory()+"/Andr2Mvc/");
+
+                if(!dir.exists())
+                    dir.mkdir();
+
+                File file = new File(filePath);
+
+                if(!file.exists())
+                {
+                    IOUtil.StoreImage(img.bytes,"Andr2Mvc",img.id+"_full.jpg");
+                }
+
+                Intent intent = new Intent(getContext(), CamImageActivity.class);
+
+                Uri imageUri=Uri.fromFile(file);
+
+                intent.putExtra("image",imageUri.toString());
+                //intent.putExtra("image",imageUri.toString());
+
+                getContext().startActivity(intent);
+
+
+            }
+        }
+
+
+    }
 
 
     static class ViewHolder {

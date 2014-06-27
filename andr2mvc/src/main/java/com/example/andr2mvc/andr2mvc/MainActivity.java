@@ -41,7 +41,7 @@ public class MainActivity extends ActionBarActivity  {
 
     Bundle bag=new Bundle();
 
-    @TargetApi(Build.VERSION_CODES.HONEYCOMB)
+    @TargetApi(Build.VERSION_CODES.KITKAT)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
