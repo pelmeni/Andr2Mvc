@@ -10,5 +10,8 @@
     <string name="title_activity_own_phone_number">OwnPhoneNumber</string>
     <string name="title_activity_gallary">GallaryActivity</string>
     <string name="title_activity_tiled_gallery">tiled_gallery</string>
+    <string name="prompt_phone">Номер телефона</string>
+    <string name="prompt_nickname">Кличка</string>
+    <string name="button_confirm_text">Подтвердить</string>
 
 </resources>

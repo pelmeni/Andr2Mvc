@@ -113,21 +113,30 @@ public class MainActivity extends ActionBarActivity  {
 
             return true;
         }
-        else if(id==R.id.action_phone_number) {
-            //TelephonyManager tMgr = (TelephonyManager) getSystemService(Context.TELEPHONY_SERVICE);
-            TelephonyManager tMgr = (TelephonyManager) getSystemService("phone");
-            String mPhoneNumber = tMgr.getLine1Number();
-            TextServicesManager m = (TextServicesManager) getSystemService(Context.TEXT_SERVICES_MANAGER_SERVICE);
+//        else if(id==R.id.action_phone_number) {
+//            //TelephonyManager tMgr = (TelephonyManager) getSystemService(Context.TELEPHONY_SERVICE);
+//            TelephonyManager tMgr = (TelephonyManager) getSystemService("phone");
+//            String mPhoneNumber = tMgr.getLine1Number();
+//            TextServicesManager m = (TextServicesManager) getSystemService(Context.TEXT_SERVICES_MANAGER_SERVICE);
+//
+//            Intent intent = new Intent(this, OwnPhoneNumber.class);
+//
+//            intent.putExtra("phoneNumber","Номер телефона-" + mPhoneNumber);
+//
+//            startActivity(intent);
+//
+//
+//
+//        }
+        else if(id==R.id.action_reg) {
 
-            Intent intent = new Intent(this, OwnPhoneNumber.class);
+            Intent intent = new Intent(this, LoginActivity.class);
 
-            intent.putExtra("phoneNumber","Номер телефона-" + mPhoneNumber);
+            //intent.putExtra("phoneNumber","Номер телефона-" + mPhoneNumber);
 
             startActivity(intent);
-
-
-
         }
+
         else if(id==R.id.action_roll) {
             Intent intent = new Intent(this, GallaryActivity.class);
 

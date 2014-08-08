@@ -3,8 +3,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     tools:context="com.example.andr2mvc.andr2mvc.MainActivity2" >
     
-    <item android:id="@+id/action_phone_number"
-        android:title="Номер телефона"
+    <item android:id="@+id/action_reg"
+        android:title="Регистрация"
         android:orderInCategory="100"
         app:showAsAction="never" />
 

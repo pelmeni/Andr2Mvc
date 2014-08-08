@@ -2,7 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/Andr2Mvc.iml" filepath="$PROJECT_DIR$/Andr2Mvc.iml" />
+      <module fileurl="file://$PROJECT_DIR$/Andr2Mvc2.iml" filepath="$PROJECT_DIR$/Andr2Mvc2.iml" />
       <module fileurl="file://$PROJECT_DIR$/andr2mvc/andr2mvc.iml" filepath="$PROJECT_DIR$/andr2mvc/andr2mvc.iml" />
       <module fileurl="file://$PROJECT_DIR$/second.iml" filepath="$PROJECT_DIR$/second.iml" />
     </modules>

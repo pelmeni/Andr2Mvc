@@ -1,0 +1,16 @@
+<resources>
+        <string name="title_activity_login">Вход и регистрация</string>
+
+    <!-- Strings related to login -->
+    <string name="prompt_email">Адрес эл. почты</string>
+    <string name="prompt_password">Секретный код</string>
+    <string name="action_sign_in">Зарегистрироваться</string>
+    <string name="action_sign_in_short">Войти</string>
+
+    <string name="error_invalid_email">Похоже на ошибку в мыле</string>
+
+    <string name="error_invalid_password">This password is too short</string>
+    <string name="error_invalid_phone">This password is too short</string>
+    <string name="error_incorrect_password">This password is incorrect</string>
+    <string name="error_field_required">Это обязательное поле</string>
+</resources>
