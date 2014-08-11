@@ -43,13 +43,13 @@ import java.util.List;
 
 public class LoginActivity extends Activity implements LoaderCallbacks<Cursor>{
 
-    /**
-     * A dummy authentication store containing known user names and passwords.
-     * TODO: remove after connecting to a real authentication system.
-     */
-    private static final String[] DUMMY_CREDENTIALS = new String[]{
-            "foo@example.com:hello", "bar@example.com:world"
-    };
+//    /**
+//     * A dummy authentication store containing known user names and passwords.
+//     * TODO: remove after connecting to a real authentication system.
+//     */
+//    private static final String[] DUMMY_CREDENTIALS = new String[]{
+//            "foo@example.com:hello", "bar@example.com:world"
+//    };
     /**
      * Keep track of the login task to ensure we can cancel it if requested.
      */
@@ -95,6 +95,15 @@ public class LoginActivity extends Activity implements LoaderCallbacks<Cursor>{
                 attemptLogin();
             }
         });
+
+        Button mRegConfirmButton=(Button) findViewById(R.id.regConfirmUserCodeButton);
+        mRegConfirmButton.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                attemptConfirm();
+            }
+        });
+
 
         mLoginFormView = findViewById(R.id.login_form);
         mProgressView = findViewById(R.id.login_progress);
@@ -187,26 +196,97 @@ public class LoginActivity extends Activity implements LoaderCallbacks<Cursor>{
 
             String simno = tMgr.getSimSerialNumber();
 
-            List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(1);
+            final List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(1);
             nameValuePairs.add(new BasicNameValuePair("email", email));
             nameValuePairs.add(new BasicNameValuePair("phone",phone));
             nameValuePairs.add(new BasicNameValuePair("nickname",nickname));
             nameValuePairs.add(new BasicNameValuePair("simno",simno.toString()));
             nameValuePairs.add(new BasicNameValuePair("operationType","1"));
 
-            AsyncTaskCompleteListener callback=new AsyncTaskCompleteListener() {
-                @Override
-                public void onTaskComplete(String result) {
-//                    Toast toast = Toast.makeText(getApplicationContext(), result, Toast.LENGTH_LONG);
-//                    toast.show();
+            final LoginActivity a=this;
 
-                    showProgress(false);
+            final AsyncTaskCompleteListener callback=new AsyncTaskCompleteListener() {
+                @Override
+                public void onTaskComplete(final String result) {
+                    a.runOnUiThread(
+                            new Runnable() {
+                                @Override
+                                public void run() {
+                                    Toast toast = Toast.makeText(getApplicationContext(), result, Toast.LENGTH_LONG);
+                                    toast.show();
+
+                                    showProgress(false);
+                                }
+                            }
+                    );
                 }
             };
 
-            HttpGetTask_GetQueryRegistrationResult t=new HttpGetTask_GetQueryRegistrationResult( callback);
+            HttpGetTask_GetQueryRegistrationResult t=new HttpGetTask_GetQueryRegistrationResult(callback);
 
             t.execute("http://pichuginsergey.no-ip.biz:9980/mvcapplication1/home/GetQueryRegistrationResult",nameValuePairs);
+
+
+        }
+    }
+
+    public void attemptConfirm() {
+        // Reset errors.
+        mEmailView.setError(null);
+        mPasswordView.setError(null);
+
+        String password = mPasswordView.getText().toString();
+
+        boolean cancel = false;
+        View focusView = null;
+
+        // Check for a valid password, if the user entered one.
+        if (TextUtils.isEmpty(password) /*&& !isPasswordValid(password)*/) {
+            mPasswordView.setError(getString(R.string.error_invalid_password));
+            focusView = mPasswordView;
+            cancel = true;
+        }
+
+        if (cancel) {
+            // There was an error; don't attempt login and focus the first
+            // form field with an error.
+            focusView.requestFocus();
+        } else {
+            // Show a progress spinner, and kick off a background task to
+            // perform the user login attempt.
+            showProgress(true);
+
+            TelephonyManager tMgr = (TelephonyManager) getSystemService(Context.TELEPHONY_SERVICE);
+
+            String simno = tMgr.getSimSerialNumber();
+
+            final List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(1);
+            nameValuePairs.add(new BasicNameValuePair("simno",simno.toString()));
+            nameValuePairs.add(new BasicNameValuePair("operationType","1"));
+            nameValuePairs.add(new BasicNameValuePair("userCode",password));
+
+            final LoginActivity a=this;
+
+            final AsyncTaskCompleteListener callback=new AsyncTaskCompleteListener() {
+                @Override
+                public void onTaskComplete(final String result) {
+                    a.runOnUiThread(
+                            new Runnable() {
+                                @Override
+                                public void run() {
+                                    Toast toast = Toast.makeText(getApplicationContext(), result, Toast.LENGTH_LONG);
+                                    toast.show();
+
+                                    showProgress(false);
+                                }
+                            }
+                    );
+                }
+            };
+
+            HttpGetTask_ConfirmQueryRegistrationResult t=new HttpGetTask_ConfirmQueryRegistrationResult(callback);
+
+            t.execute("http://pichuginsergey.no-ip.biz:9980/mvcapplication1/home/ConfirmQueryRegistrationResult",nameValuePairs);
 
 
         }
@@ -280,14 +360,14 @@ public class LoginActivity extends Activity implements LoaderCallbacks<Cursor>{
 
     @Override
     public void onLoadFinished(Loader<Cursor> cursorLoader, Cursor cursor) {
-        List<String> emails = new ArrayList<String>();
-        cursor.moveToFirst();
-        while (!cursor.isAfterLast()) {
-            emails.add(cursor.getString(ProfileQuery.ADDRESS));
-            cursor.moveToNext();
-        }
+//        List<String> emails = new ArrayList<String>();
+//        cursor.moveToFirst();
+//        while (!cursor.isAfterLast()) {
+//            emails.add(cursor.getString(ProfileQuery.ADDRESS));
+//            cursor.moveToNext();
+//        }
 
-        addEmailsToAutoComplete(emails);
+        //addEmailsToAutoComplete(emails);
     }
 
     @Override

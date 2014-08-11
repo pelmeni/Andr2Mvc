@@ -13,5 +13,6 @@
     <string name="prompt_phone">Номер телефона</string>
     <string name="prompt_nickname">Кличка</string>
     <string name="button_confirm_text">Подтвердить</string>
+    <string name="title_activity_user_info">Данные пользователя</string>
 
 </resources>

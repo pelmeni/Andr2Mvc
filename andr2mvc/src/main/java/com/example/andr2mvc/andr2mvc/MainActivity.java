@@ -22,6 +22,7 @@ import android.view.textservice.TextServicesManager;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import org.apache.http.NameValuePair;
 import org.apache.http.message.BasicNameValuePair;
@@ -130,11 +131,77 @@ public class MainActivity extends ActionBarActivity  {
 //        }
         else if(id==R.id.action_reg) {
 
-            Intent intent = new Intent(this, LoginActivity.class);
+            final Activity a=this;
+            TelephonyManager tMgr = (TelephonyManager) getSystemService(Context.TELEPHONY_SERVICE);
 
-            //intent.putExtra("phoneNumber","Номер телефона-" + mPhoneNumber);
+            String simno = tMgr.getSimSerialNumber();
 
-            startActivity(intent);
+            final List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(1);
+
+            nameValuePairs.add(new BasicNameValuePair("simno",simno.toString()));
+
+            final AsyncTaskCompleteListener callback=new AsyncTaskCompleteListener() {
+                @Override
+                public void onTaskComplete(final String result) {
+                    a.runOnUiThread(
+                            new Runnable() {
+                                @Override
+                                public void run() {
+
+                                    if(Integer.parseInt(result)==0) {
+                                        Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
+                                        startActivity(intent);
+                                    }
+                                    else if(Integer.parseInt(result)==1){
+
+                                        final AsyncTaskCompleteListener callback1=new AsyncTaskCompleteListener() {
+                                            @Override
+                                            public void onTaskComplete(final String result) {
+                                                a.runOnUiThread(
+                                                        new Runnable() {
+                                                            @Override
+                                                            public void run() {
+                                                                Intent intent = new Intent(getApplicationContext(), UserInfoActivity.class);
+
+                                                                String [] items = result.split("[|]");
+
+                                                                intent.putExtra("nickname",items[1]);
+
+                                                                intent.putExtra("email",items[2]);
+
+                                                                intent.putExtra("phone",items[3]);
+
+                                                                startActivity(intent);
+                                                            }
+
+                                                            //showProgress(false);
+                                                        }
+                                                );
+                                            }
+                                        };
+
+                                        HttpGetTask_GetGeneralInfo t=new HttpGetTask_GetGeneralInfo(callback1);
+
+                                        t.execute("http://pichuginsergey.no-ip.biz:9980/mvcapplication1/home/GetInfoBySimNo",nameValuePairs);
+
+
+                                       // Intent intent = new Intent(getApplicationContext(), UserInfoActivity.class);
+                                        //startActivity(intent);
+                                    }
+
+                                    //showProgress(false);
+                                }
+                            }
+                    );
+                }
+            };
+
+
+            HttpGetTask_GetGeneralInfo t=new HttpGetTask_GetGeneralInfo(callback);
+
+            t.execute("http://pichuginsergey.no-ip.biz:9980/mvcapplication1/home/IsSimRegistred",nameValuePairs);
+
+
         }
 
         else if(id==R.id.action_roll) {
