@@ -40,8 +40,9 @@ public class HttpGetTask_GetImageById extends AsyncTask<String,Void,dbimage> {
         this.imageId=id;
         this.callback = callback;
     }
-    String GetData(String url) {
-    // Create a new HttpClient and Post Header
+    String GetData(String url)
+    {
+
     HttpClient httpclient = new DefaultHttpClient();
 
     HttpGet httpget=new HttpGet(url);
@@ -112,34 +113,24 @@ public class HttpGetTask_GetImageById extends AsyncTask<String,Void,dbimage> {
     @Override
     protected dbimage doInBackground(String... urls) {
 
-        //if(lock.tryLock()){
-            try {
-                String result = GetData(urls[0]);
+        Log.i("doInBackground:begin", "HttpGetTask_GetImageById "+urls[0]);
 
-                byte[] buf = Base64.decode(result, Base64.NO_WRAP);
+        String result = GetData(urls[0]);
 
-                Bitmap bm = BitmapFactory.decodeByteArray(buf, 0, buf.length);
+        byte[] buf = Base64.decode(result, Base64.NO_WRAP);
 
-                buf=null;
+        Bitmap bm = BitmapFactory.decodeByteArray(buf, 0, buf.length);
 
-                return new dbimage(imageId, bm);
-            }
-            catch (Exception ex){
-                if(ex!=null)
-                Log.d("HttpGetTask_GetImageById",ex.getMessage());
-            }
-            finally{
-                //lock.unlock();
-            }
-        //}
-        return null;
+        Log.i("doInBackground:end", "HttpGetTask_GetImageById "+urls[0]);
+
+        return new dbimage(imageId, bm);
+
     }
 
     @Override
     protected void onPreExecute() {
         super.onPreExecute();
         try {
-
             Log.i("onPre", "call");
         } catch (Exception e) {
             // TODO: handle exception

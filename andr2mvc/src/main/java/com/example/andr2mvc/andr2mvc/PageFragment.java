@@ -25,23 +25,15 @@ public class PageFragment extends Fragment implements GenericAsyncTaskCompleteLi
 
     }
 
-//    public PageFragment (dbimage i) {
-//        image=i;
-//    }
-//    public PageFragment (int i) {
-//        image=new dbimage(i,null);
-//    }
-
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
     }
-ImageView imageV;
+    ImageView imageV;
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
         View view = inflater.inflate(R.layout.fragment, null);
-        //View view = inflater.inflate(R.layout.fragment, container, false);
 
         if(image!=null) {
 
@@ -61,7 +53,7 @@ ImageView imageV;
         textView.setText(s);
 
         HttpGetTask_GetImageById t=new HttpGetTask_GetImageById(this, ids[pos]);
-        t.execute("http://muscle-planet.ru:9980/MvcApplication1/Home/GetImageThumb?id=" + s);
+        t.execute(DbSettings.get_ApplicationUrl(container.getContext())+"GetImageThumb?id=" + s);
         t=null;
         System.gc();
 

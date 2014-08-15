@@ -39,6 +39,7 @@ public class MainActivity extends ActionBarActivity  {
     static final String TAG = "myLogs";
     //static final int PAGE_COUNT = 10;
 
+    PropertiesDbAdapter dbHelper;
 
     Bundle bag=new Bundle();
 
@@ -50,8 +51,13 @@ public class MainActivity extends ActionBarActivity  {
 
         setContentView(R.layout.activity_main);
 
-
         gps=new GPSLocationListener(this.getApplicationContext());
+
+        dbHelper = new PropertiesDbAdapter(this);
+        dbHelper.open();
+        dbHelper.initData();
+        //String v=dbHelper.getApplicationUrl();
+
 
 //                if (savedInstanceState == null) {
 //                    getSupportFragmentManager().beginTransaction()
@@ -79,7 +85,13 @@ public class MainActivity extends ActionBarActivity  {
     }
 
 
-
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if (dbHelper != null) {
+            dbHelper.close();
+        }
+    }
 
 
 
@@ -182,7 +194,10 @@ public class MainActivity extends ActionBarActivity  {
 
                                         HttpGetTask_GetGeneralInfo t=new HttpGetTask_GetGeneralInfo(callback1);
 
-                                        t.execute("http://pichuginsergey.no-ip.biz:9980/mvcapplication1/home/GetInfoBySimNo",nameValuePairs);
+                                        String url=dbHelper.getApplicationUrl()+"GetInfoBySimNo";
+
+                                        //t.execute("http://pichuginsergey.no-ip.biz:9980/mvcapplication1/home/GetInfoBySimNo",nameValuePairs);
+                                        t.execute(url,nameValuePairs);
 
 
                                        // Intent intent = new Intent(getApplicationContext(), UserInfoActivity.class);
@@ -199,7 +214,10 @@ public class MainActivity extends ActionBarActivity  {
 
             HttpGetTask_GetGeneralInfo t=new HttpGetTask_GetGeneralInfo(callback);
 
-            t.execute("http://pichuginsergey.no-ip.biz:9980/mvcapplication1/home/IsSimRegistred",nameValuePairs);
+            String url=dbHelper.getApplicationUrl()+"IsSimRegistred";
+
+            //t.execute("http://pichuginsergey.no-ip.biz:9980/mvcapplication1/home/IsSimRegistred",nameValuePairs);
+            t.execute(url,nameValuePairs);
 
 
         }
@@ -299,8 +317,9 @@ public class MainActivity extends ActionBarActivity  {
                         //postData();
                         HttpPostTask t=new HttpPostTask();
                         //t.execute("http://192.168.1.229/mvcapplication1/home/AddImage",nameValuePairs);
-                        t.execute("http://pichuginsergey.no-ip.biz:9980/mvcapplication1/home/AddImage",nameValuePairs);
-
+                        String url=dbHelper.getApplicationUrl()+"AddImage";
+                        //t.execute("http://pichuginsergey.no-ip.biz:9980/mvcapplication1/home/AddImage",nameValuePairs);
+                        t.execute(url,nameValuePairs);
 
 
                         Log.d("Camera", "base64-" + imgString);

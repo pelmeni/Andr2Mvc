@@ -33,7 +33,8 @@ public class GallaryActivity extends ActionBarActivity implements View.OnClickLi
         pager.setAdapter(pagerAdapter);
 
         HttpGetTask_GetImagesIds t=new HttpGetTask_GetImagesIds(this);
-        t.execute("http://muscle-planet.ru:9980/mvcapplication1/home/GetImagesIds");
+        //t.execute("http://muscle-planet.ru:9980/mvcapplication1/home/GetImagesIds");
+        t.execute(DbSettings.get_ApplicationUrl(getApplicationContext())+ "GetImagesIds");
         t=null;
 
     }

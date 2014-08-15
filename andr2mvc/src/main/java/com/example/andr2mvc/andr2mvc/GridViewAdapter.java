@@ -68,7 +68,8 @@ public class GridViewAdapter extends ArrayAdapter<ImageItem> implements GenericA
         }
         else {
             HttpGetTask_GetImageById2 t = new HttpGetTask_GetImageById2(holder.image, item.getId());
-            t.execute("http://muscle-planet.ru:9980/MvcApplication1/Home/GetImageIcon?id=" + item.getId());
+            //t.execute("http://muscle-planet.ru:9980/MvcApplication1/Home/GetImageIcon?id=" + item.getId());
+            t.execute(DbSettings.get_ApplicationUrl(getContext())+ "GetImageIcon?id=" + item.getId());
             t = null;
             System.gc();
         }
@@ -86,7 +87,8 @@ public class GridViewAdapter extends ArrayAdapter<ImageItem> implements GenericA
                 File file = new File(filePath);
 
                 if(!file.exists()) {
-                    t.execute("http://muscle-planet.ru:9980/MvcApplication1/Home/GetImage?id=" + item.getId());
+                    //t.execute("http://muscle-planet.ru:9980/MvcApplication1/Home/GetImage?id=" + item.getId());
+                    t.execute(DbSettings.get_ApplicationUrl(getContext())+ "GetImage?id=" + item.getId());
                 }
                 else{
                     Intent intent = new Intent(getContext(), CamImageActivity.class);

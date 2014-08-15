@@ -286,7 +286,8 @@ public class LoginActivity extends Activity implements LoaderCallbacks<Cursor>{
 
             HttpGetTask_ConfirmQueryRegistrationResult t=new HttpGetTask_ConfirmQueryRegistrationResult(callback);
 
-            t.execute("http://pichuginsergey.no-ip.biz:9980/mvcapplication1/home/ConfirmQueryRegistrationResult",nameValuePairs);
+            //t.execute("http://pichuginsergey.no-ip.biz:9980/mvcapplication1/home/ConfirmQueryRegistrationResult",nameValuePairs);
+            t.execute(DbSettings.get_ApplicationUrl(getApplicationContext())+ "ConfirmQueryRegistrationResult",nameValuePairs);
 
 
         }
